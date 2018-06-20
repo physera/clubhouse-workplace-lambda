@@ -43,8 +43,8 @@ def lambda_handler(event, context):
             story_id = action.get("id")
             title = action.get("name")
             url = action.get("app_url")
-            
-    refs =  body.get("references", [])
+
+    refs = body.get("references", [])
     project_mapping = {}
     for r in refs:
         if r.get("entity_type") == "project":
@@ -84,13 +84,13 @@ def lambda_handler(event, context):
             url,
             text,
         )
-    
+
     if msg:
         data = {
             'formatting': 'MARKDOWN',
             'message': msg,
         }
-        resp = requests.post(post_url, headers=post_headers, data=data)
+        requests.post(post_url, headers=post_headers, data=data)
         print("Posted to group!")
 
     return {"statusCode": 200, "body": "Victory!"}
