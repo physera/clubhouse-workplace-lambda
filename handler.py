@@ -44,12 +44,6 @@ def lambda_handler(event, context):
             title = action.get("name")
             url = action.get("app_url")
 
-    refs = body.get("references", [])
-    project_mapping = {}
-    for r in refs:
-        if r.get("entity_type") == "project":
-            project_mapping[r.get("id")] = r.get("name")
-
     if not story_id:
         return {"statusCode": 200, "body": "No story reference found."}
 
@@ -60,8 +54,23 @@ def lambda_handler(event, context):
         ),
     ).json().get('profile', {}).get('mention_name')
 
+    project_id = requests.get(
+        "https://api.clubhouse.io/api/v2/stories/{}?token={}".format(
+            story_id,
+            os.environ["CLUBHOUSE_API_TOKEN"],
+        ),
+    ).json().get('project_id')
+
+    project_name = None
+    if project_id:
+        project_name = requests.get(
+            "https://api.clubhouse.io/api/v2/projects/{}?token={}".format(
+                project_id,
+                os.environ["CLUBHOUSE_API_TOKEN"],
+            ),
+        ).json().get('name')
+
     # TODO:
-    # * Fetch the project when needed.
     # * Allow redirecting posts depending on project.
 
     for action in body.get("actions"):
@@ -79,11 +88,8 @@ def lambda_handler(event, context):
             print("Warning: Unsupported entity type: ", action)
             continue
 
-        project = ''
-        if "project_id" in action:
-            project = project_mapping.get(action.get("project_id"))
-            if project:
-                project = "[{}] ".format(project)
+        if project_name:
+            project = "[{}] ".format(project_name)
 
         msg = "## {}**{}** {}:\n[[#{}] {}]({})\n>{}".format(
             project,
