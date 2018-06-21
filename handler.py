@@ -10,9 +10,10 @@ def lambda_handler(event, context):
     post_headers = {
         "Authorization": "Bearer {}".format(os.environ['FB_API_TOKEN']),
     }
-    post_url = "https://graph.facebook.com/{}/feed".format(
-        os.environ['FB_GROUP_ID'],
-    )
+
+    project_groups = os.environ.get("PROJECT_GROUP_IDS")
+    if project_groups:
+        project_groups = json.loads(project_groups)
 
     headers = event["headers"]
     body = event["body"]
@@ -70,8 +71,7 @@ def lambda_handler(event, context):
             ),
         ).json().get('name')
 
-    # TODO:
-    # * Allow redirecting posts depending on project.
+    group_id = project_groups.get(project_name, os.environ['FB_GROUP_ID'])
 
     for action in body.get("actions"):
         a = action.get("action")
@@ -100,6 +100,10 @@ def lambda_handler(event, context):
             url,
             text,
         )
+
+    post_url = "https://graph.facebook.com/{}/feed".format(
+        group_id,
+    )
 
     if msg:
         data = {
