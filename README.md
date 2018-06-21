@@ -27,6 +27,7 @@ Since the webhooks payload doesn't contain all the information we need, we also 
 In addition to the environment variables you've set following the document above, you'll also need to set:
 * `CLUBHOUSE_WEBHOOK_SECRET` - Set this to a sufficiently long/complicated secret key you want to use to sign Github requests. Take note of it
 * `CLUBHOUSE_API_TOKEN` - Set this to the API token you got from Clubhouse.
+* `PROJECT_GROUP_IDS` - *(Optional)* This is a json encoded mapping where the keys are names of Clubhouse projects and values are Workplace group ids.  If present, the handler will first look to see if the affected story is in this mapping and if so the post will be sent to the corresponding group id instead of `FB_GROUP_ID`.
 
 ## Version History
 
