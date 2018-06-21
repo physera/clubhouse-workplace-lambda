@@ -26,7 +26,7 @@ Since the webhooks payload doesn't contain all the information we need, we also 
 
 In addition to the environment variables you've set following the document above, you'll also need to set:
 * `CLUBHOUSE_WEBHOOK_SECRET` - Set this to a sufficiently long/complicated secret key you want to use to sign Github requests. Take note of it
-* `CLUBHOUSE_API_TOKEN` - Set this to the API token you got when you got the Clubhouse API token.
+* `CLUBHOUSE_API_TOKEN` - Set this to the API token you got from Clubhouse.
 
 ## Version History
 
