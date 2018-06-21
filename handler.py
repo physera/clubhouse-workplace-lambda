@@ -53,6 +53,17 @@ def lambda_handler(event, context):
     if not story_id:
         return {"statusCode": 200, "body": "No story reference found."}
 
+    member_name = requests.get(
+        "https://api.clubhouse.io/api/v2/members/{}?token={}".format(
+            body.get("member_id"),
+            os.environ["CLUBHOUSE_API_TOKEN"],
+        ),
+    ).json().get('profile', {}).get('mention_name')
+
+    # TODO:
+    # * Fetch the project when needed.
+    # * Allow redirecting posts depending on project.
+
     for action in body.get("actions"):
         a = action.get("action")
         if a != "create":
@@ -74,10 +85,9 @@ def lambda_handler(event, context):
             if project:
                 project = "[{}] ".format(project)
 
-        # TODO: Author name.
-        msg = "{}{} *{}*:\n[[#{}] {}]({})\n{}".format(
+        msg = "## {}**{}** {}:\n[[#{}] {}]({})\n>{}".format(
             project,
-            body.get("member_id"),
+            member_name,
             verb,
             story_id,
             title,
