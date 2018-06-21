@@ -31,4 +31,5 @@ In addition to the environment variables you've set following the document above
 
 ## Version History
 
+* 2018-06-20 Display actual user names and project names. Allow per-project groups.
 * 2018-06-19 Initial release
